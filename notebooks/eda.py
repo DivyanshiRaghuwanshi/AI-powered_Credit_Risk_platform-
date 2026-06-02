@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
+import datetime
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -193,6 +194,28 @@ def run_eda(csv_path: Path) -> dict:
             f.write("## EXT_SOURCE_2 Distribution\n\n")
             f.write(f"![ext_source_2 distribution]({out['ext_plot']})\n\n")
         f.write("## Notes\n\n- Summary CSV and numeric stats saved under `data/processed/`.\n")
+
+    # Save a timestamped copy of the markdown report and all the plots in a history subfolder
+    import shutil
+    try:
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        history_dir = DOCS_RES / "history"
+        history_dir.mkdir(parents=True, exist_ok=True)
+        
+        shutil.copy2(md, history_dir / f"home_credit_eda_{timestamp}.md")
+        shutil.copy2(summary_file, history_dir / f"home_credit_eda_summary_{timestamp}.json")
+        
+        stats_file = DATA_PROC / "home_credit_numeric_stats.csv"
+        if stats_file.exists():
+            shutil.copy2(stats_file, history_dir / f"home_credit_numeric_stats_{timestamp}.csv")
+            
+        for img_name in ["target_distribution.png", "missingness_top.png", "corr_heatmap.png", "credit_distribution.png", "ext_source_2_distribution.png"]:
+            src_img = DOCS_RES / img_name
+            if src_img.exists():
+                shutil.copy2(src_img, history_dir / f"{src_img.stem}_{timestamp}.png")
+        print(f"Saved historical backup files under {history_dir} (suffix: _{timestamp})")
+    except Exception as e:
+        print("Failed to save historical backup:", e)
 
     print("Wrote summary to:", md)
     return out
