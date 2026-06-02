@@ -6,15 +6,9 @@ Rows: 356255  \n+Columns: 92
 
 Detected target column: **TARGET**
 
-![target distribution](docs\results\target_distribution.png)
-
 ## Missingness
 
-![missingness](docs\results\missingness_top.png)
-
 ## Correlations
-
-![correlations](docs\results\corr_heatmap.png)
 
 ## Notes
 

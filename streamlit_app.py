@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 import os
@@ -146,7 +146,7 @@ def section_eda(base: str) -> None:
     md_file = None
     resolved = Path(__file__).resolve()
     repo_root = None
-    for i in range(1, 6):
+    for i in range(0, 6):
         candidate_root = resolved.parents[i] if i < len(resolved.parents) else None
         if not candidate_root:
             continue
