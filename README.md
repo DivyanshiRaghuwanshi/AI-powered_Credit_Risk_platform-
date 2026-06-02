@@ -57,7 +57,22 @@ flowchart TD
 
 ---
 
-## 2. Setup & Run Instructions
+## 2. Exploratory Data Analysis (EDA)
+
+The platform includes a dedicated EDA module to inspect data quality, target distributions, and feature correlations.
+
+* **Active EDA Report**: The current EDA results are saved in the project at [home_credit_eda.md](docs/results/home_credit_eda.md). This report contains visual plots of target distribution, missingness, feature correlation heatmap, credit request density distribution, and boxplots of the key rating factor `EXT_SOURCE_2`.
+* **Historical Archives**: To ensure that every analysis run is preserved, each execution of the EDA script writes a unique, timestamped backup to the directory:
+  * [docs/results/history/](docs/results/history/)
+  Each run contains its own markdown report, data statistics files, and plot diagrams labeled with the execution timestamp (`_YYYYMMDD_HHMMSS`).
+* **Execution**: To run the EDA analysis dynamically and generate/archive new outputs:
+  ```bash
+  python notebooks/eda.py
+  ```
+
+---
+
+## 3. Setup & Run Instructions
 
 ### Step 1: Configure Environment
 1. Copy the example environment file:
@@ -100,7 +115,7 @@ To run the platform locally in a Python environment:
 
 ---
 
-## 3. Machine Learning Layer
+## 4. Machine Learning Layer
 
 ### Model Selection Rationale
 * **Random Forest Classifier**: Chosen as the primary default predictor. It provides a robust, non-linear classifier that resists overfitting on tabulated data, handles missing values gracefully, and native integration with **SHAP TreeExplainer** for high-fidelity explanations.
@@ -118,7 +133,7 @@ Default rates in default risk datasets are highly skewed (e.g. only ~8% of borro
 
 ---
 
-## 4. Explainable AI (SHAP)
+## 5. Explainable AI (SHAP)
 
 For any loan prediction, the system extracts the local feature weights:
 1. **TreeExplainer Evaluation**: Calculates exact SHAP values representing feature contributions pushing predicted probabilities higher (increases risk) or lower (decreases risk).
@@ -126,12 +141,12 @@ For any loan prediction, the system extracts the local feature weights:
 
 ---
 
-## 5. Conversational "Talk-to-Data" System
+## 6. Conversational "Talk-to-Data" System
 
 The chatbot converts natural-language queries into PostgreSQL SELECT queries:
 * **Semantic Context Construction**: Reads the system table column names and descriptions from the database (`metadata_column_descriptions`) and constructs a detailed context block explaining the schema.
 * **Prompt Engineering**: The prompt constrains the LLM to only write SELECT queries, requires double-quotes around identifiers for syntax correctness, and provides a conversational memory block containing prior turns.
-* **Self-Repair Execution Loop**: 
+* **Self-Repair Execution Loop**:
   1. The LLM returns a SQL query.
   2. The database runner attempts execution.
   3. If Postgres returns a syntax or execution error, the system automatically redirects the query, database schema, and error logs back to the LLM to perform repair.
@@ -140,7 +155,7 @@ The chatbot converts natural-language queries into PostgreSQL SELECT queries:
 
 ---
 
-## 6. Decision Rules & Statistical Derivation
+## 7. Decision Rules & Statistical Derivation
 
 Model findings are bridged to banking policy using Decision Rules:
 * **Statistical Lift Evaluation**: Each rule segment's default rate ($p_{rule}$) is compared to the default rate of the complement ($p_{non\_rule}$).
@@ -152,7 +167,7 @@ Model findings are bridged to banking policy using Decision Rules:
 
 ---
 
-## 7. Known Limitations & Future Improvements
+## 8. Known Limitations & Future Improvements
 
 1. **In-Memory Mock Database Fallback**: Due to local database connection configurations, the Streamlit app contains toggles to switch between mock/in-memory data structures and real Postgres databases. For large-scale use, the Postgres database connection should be persistent.
 2. **LLM Dependency**: The Talk-to-Data SQL generator depends on OpenAI-compatible API connectivity. Rate limits on public free keys (like Groq) can occasionally cause timeout failures under heavy load. A local model deployment (e.g. Llama-3-8B-Instruct) would solve this.
