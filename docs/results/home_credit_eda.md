@@ -1,0 +1,21 @@
+# EDA: home_credit_future_dpd_labels.csv
+
+Rows: 356255  \n+Columns: 92  
+
+## Target
+
+Detected target column: **TARGET**
+
+![target distribution](docs\results\target_distribution.png)
+
+## Missingness
+
+![missingness](docs\results\missingness_top.png)
+
+## Correlations
+
+![correlations](docs\results\corr_heatmap.png)
+
+## Notes
+
+- Summary CSV and numeric stats saved under `data/processed/`.
