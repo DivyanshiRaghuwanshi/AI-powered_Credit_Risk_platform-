@@ -174,7 +174,7 @@ def section_eda(base: str) -> None:
                 st.markdown(f.read())
 
         # Display images if present
-        for img_name in ["target_distribution.png", "missingness_top.png", "corr_heatmap.png"]:
+        for img_name in ["target_distribution.png", "missingness_top.png", "corr_heatmap.png", "credit_distribution.png", "ext_source_2_distribution.png"]:
             img_path = results_dir / img_name
             if img_path.exists():
                 st.image(str(img_path), caption=img_name, use_column_width=True)

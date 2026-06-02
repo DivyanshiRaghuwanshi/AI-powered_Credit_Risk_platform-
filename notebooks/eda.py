@@ -137,7 +137,33 @@ def run_eda(csv_path: Path) -> dict:
         plt.tight_layout()
         plt.savefig(corr_plot)
         plt.close()
-        out["corr_plot"] = str(corr_plot.relative_to(ROOT))
+        out["corr_plot"] = str(corr_plot.relative_to(ROOT)).replace("\\", "/")
+
+    # New EDA 1: Credit amount distribution KDE
+    if "AMT_CREDIT" in df.columns and target_col:
+        plt.figure(figsize=(7,4))
+        sns.kdeplot(data=df, x="AMT_CREDIT", hue=target_col, common_norm=False, fill=True, palette="Set1")
+        plt.title("Credit Amount Distribution by Target")
+        plt.xlabel("Amount of Credit")
+        plt.ylabel("Density")
+        cred_plot = DOCS_RES / "credit_distribution.png"
+        plt.tight_layout()
+        plt.savefig(cred_plot)
+        plt.close()
+        out["credit_plot"] = str(cred_plot.relative_to(ROOT)).replace("\\", "/")
+
+    # New EDA 2: EXT_SOURCE_2 distribution boxplot
+    if "EXT_SOURCE_2" in df.columns and target_col:
+        plt.figure(figsize=(7,4))
+        sns.boxplot(data=df, x=target_col, y="EXT_SOURCE_2", palette="Set2")
+        plt.title("EXT_SOURCE_2 Distribution by Target")
+        plt.xlabel("Target (0 = Repaid, 1 = Default)")
+        plt.ylabel("EXT_SOURCE_2 Score")
+        ext_plot = DOCS_RES / "ext_source_2_distribution.png"
+        plt.tight_layout()
+        plt.savefig(ext_plot)
+        plt.close()
+        out["ext_plot"] = str(ext_plot.relative_to(ROOT)).replace("\\", "/")
 
     # save summary JSON
     summary_file = DATA_PROC / "home_credit_eda_summary.json"
@@ -160,6 +186,12 @@ def run_eda(csv_path: Path) -> dict:
         if out.get("corr_plot"):
             f.write("## Correlations\n\n")
             f.write(f"![correlations]({out['corr_plot']})\n\n")
+        if out.get("credit_plot"):
+            f.write("## Credit Amount Distribution\n\n")
+            f.write(f"![credit distribution]({out['credit_plot']})\n\n")
+        if out.get("ext_plot"):
+            f.write("## EXT_SOURCE_2 Distribution\n\n")
+            f.write(f"![ext_source_2 distribution]({out['ext_plot']})\n\n")
         f.write("## Notes\n\n- Summary CSV and numeric stats saved under `data/processed/`.\n")
 
     print("Wrote summary to:", md)
