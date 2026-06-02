@@ -3,6 +3,7 @@
 A lightweight credit risk intelligence platform designed to predict default probabilities, explain individual customer risks, turn machine learning insights into credit policy rules, and enable conversational data analysis for banking analysts.
 
 **Deployment Link**: https://bunfsqlosfun8fnkjnxakv.streamlit.app/
+**System Design PDF**: https://drive.google.com/file/d/10bsf2tAyovag5RKL7P1gh4BgrI9bD2WX/view?usp=sharing
 
 > [!IMPORTANT]
 > **Docker Containerization & Deployment Verification**
