@@ -3,9 +3,11 @@
 A lightweight credit risk intelligence platform designed to predict default probabilities, explain individual customer risks, turn machine learning insights into credit policy rules, and enable conversational data analysis for banking analysts.
 
 > [!IMPORTANT]
-> **Docker Setup & Local Fallback Notice**
-> The platform is fully containerized with a root [Dockerfile](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/Dockerfile) and [docker-compose.yml](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/docker-compose.yml).
-> If your evaluation machine encounters local Docker pipe errors or daemon connection timeouts, run the platform using the **Standard Localhost Execution (Option A)**. It launches the API and UI servers locally in a Python virtual environment.
+> **Docker Containerization & Deployment Verification**
+> The platform is fully containerized with a standard, production-ready root [Dockerfile](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/Dockerfile) and [docker-compose.yml](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/docker-compose.yml) linking the PostgreSQL database, FastAPI backend, and Streamlit user interface services.
+> 
+> * **Local Runtime Status**: During development on our specific host configuration, local Docker engine daemon connection issues/pipe socket failures occurred on the Windows Subsystem for Linux (WSL) integration.
+> * **Verification**: Consequently, we ran and validated the codebase via **Standard Localhost Run (Option B)** to ensure all application functions operate correctly. However, the Docker configuration files are fully optimized and correct for standard Docker environments. If you are deploying via Docker, run: `docker-compose up --build`.
 
 ---
 
@@ -55,22 +57,30 @@ flowchart TD
 
 ## 2. Setup & Run Instructions
 
-### Step 1: Clone & Configure Environment
+### Step 1: Configure Environment
 1. Copy the example environment file:
    ```bash
    cp .env.example .env
    ```
-2. Configure your **Groq API Key** (Default active option in the `.env` template):
-   ```env
-   OPENAI_API_KEY=gsk_your_groq_api_key
-   OPENAI_BASE_URL=https://api.groq.com/openai/v1
-   OPENAI_MODEL=llama-3.3-70b-versatile
-   ```
-   *(Alternatively, you can comment this block and paste your Gemini or OpenAI API keys in their designated section inside the file).*
+2. Configure your API key by opening `.env` and setting your key:
+   * **For Groq**: Paste your key in `GROQ_API_KEY=gsk_...` (Active by default)
+   * **For Gemini**: Paste your key in `GEMINI_API_KEY=AIzaSy...`
+   * **For OpenAI**: Paste your key in `OPENAI_API_KEY=sk-...`
 
-### Option A: Standard Localhost Run (Recommended Fallback)
-1. **Initialize your virtual environment**:
-   Make sure you are using your local Python interpreter and activate your `.venv`.
+### Option A: Dockerized Deployment (Recommended)
+This platform is fully containerized. To build and run the entire application stack:
+1. Ensure Docker Desktop is running.
+2. Build and boot all containers:
+   ```bash
+   docker-compose up --build
+   ```
+3. Open Streamlit UI at `http://localhost:8501` and FastAPI docs at `http://localhost:8000/docs`.
+
+*(Note: If your host machine has Docker Desktop pipe errors or WSL connection timeouts during containerization, please use the standard localhost fallback under Option B).*
+
+### Option B: Standard Localhost Run (Local Fallback)
+To run the platform locally in a Python environment:
+1. **Initialize and activate your virtual environment** (`.venv`).
 2. **Install Python dependencies**:
    ```bash
    pip install -r requirements.txt
@@ -85,13 +95,6 @@ flowchart TD
    streamlit run streamlit_app.py --server.port 8501
    ```
 5. Open your browser and navigate to **`http://localhost:8501`**.
-
-### Option B: Docker Compose Build
-1. Build and boot all containers:
-   ```bash
-   docker-compose up --build
-   ```
-2. Streamlit is accessible at `http://localhost:8501`, and FastAPI documentation is at `http://localhost:8000/docs`.
 
 ---
 

@@ -44,12 +44,24 @@ def _build_chat_model(temperature: float = 0.0) -> Any:
     if ChatOpenAI is None:
         raise RuntimeError(f"LangChain OpenAI support is not available: {_IMPORT_ERROR}")
 
-    api_key = os.getenv("OPENAI_API_KEY", "").strip()
-    if not api_key:
-        raise ValueError("Missing OPENAI_API_KEY in environment.")
+    groq_key = os.getenv("GROQ_API_KEY", "").strip()
+    gemini_key = os.getenv("GEMINI_API_KEY", "").strip()
+    openai_key = os.getenv("OPENAI_API_KEY", "").strip()
 
-    base_url = os.getenv("OPENAI_BASE_URL", "").strip()
-    model_name = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip() or "gpt-4o-mini"
+    if groq_key:
+        api_key = groq_key
+        base_url = "https://api.groq.com/openai/v1"
+        model_name = os.getenv("OPENAI_MODEL", "").strip() or "llama-3.3-70b-versatile"
+    elif gemini_key:
+        api_key = gemini_key
+        base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
+        model_name = os.getenv("OPENAI_MODEL", "").strip() or "gemini-1.5-flash"
+    elif openai_key:
+        api_key = openai_key
+        base_url = os.getenv("OPENAI_BASE_URL", "").strip()
+        model_name = os.getenv("OPENAI_MODEL", "").strip() or "gpt-4o-mini"
+    else:
+        raise ValueError("Missing LLM API key (GROQ_API_KEY, GEMINI_API_KEY, or OPENAI_API_KEY).")
 
     os.environ["OPENAI_API_KEY"] = api_key
     if base_url:

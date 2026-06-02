@@ -24,9 +24,22 @@ NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password123")
 NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "neo4j")
 
 # LLM Config
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
-OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "").strip()
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip()
+_groq_key = os.getenv("GROQ_API_KEY", "").strip()
+_gemini_key = os.getenv("GEMINI_API_KEY", "").strip()
+_openai_key = os.getenv("OPENAI_API_KEY", "").strip()
+
+if _groq_key:
+    OPENAI_API_KEY = _groq_key
+    OPENAI_BASE_URL = "https://api.groq.com/openai/v1"
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "").strip() or "llama-3.3-70b-versatile"
+elif _gemini_key:
+    OPENAI_API_KEY = _gemini_key
+    OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "").strip() or "gemini-1.5-flash"
+else:
+    OPENAI_API_KEY = _openai_key
+    OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "").strip()
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "").strip() or "gpt-4o-mini"
 
 # Path Settings
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
