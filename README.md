@@ -2,9 +2,11 @@
 
 A lightweight credit risk intelligence platform designed to predict default probabilities, explain individual customer risks, turn machine learning insights into credit policy rules, and enable conversational data analysis for banking analysts.
 
+**Deployment Link**: https://bunfsqlosfun8fnkjnxakv.streamlit.app/
+
 > [!IMPORTANT]
 > **Docker Containerization & Deployment Verification**
-> The platform is fully containerized with a standard, production-ready root [Dockerfile](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/Dockerfile) and [docker-compose.yml](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/docker-compose.yml) linking the PostgreSQL database, FastAPI backend, and Streamlit user interface services.
+> The platform is fully containerized with a standard, production-ready root [Dockerfile](Dockerfile) and [docker-compose.yml](docker-compose.yml) linking the PostgreSQL database, FastAPI backend, and Streamlit user interface services.
 > 
 > * **Local Runtime Status**: During development on our specific host configuration, local Docker engine daemon connection issues/pipe socket failures occurred on the Windows Subsystem for Linux (WSL) integration.
 > * **Verification**: Consequently, we ran and validated the codebase via **Standard Localhost Run (Option B)** to ensure all application functions operate correctly. However, the Docker configuration files are fully optimized and correct for standard Docker environments. If you are deploying via Docker, run: `docker-compose up --build`.
@@ -43,15 +45,15 @@ flowchart TD
 ```
 
 ### Component Summary:
-* **UI Streamlit Application ([streamlit_app.py](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/streamlit_app.py))**: An interactive dashboard containing sections for Customer Insights, NL-to-SQL chatbot, EDA reports, ML training, statistical rule evaluation, and testing.
-* **FastAPI Backend Server ([app.py](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/app.py))**: Exposes REST endpoints for LLM query generation, statistical validations, and inference scoring.
+* **UI Streamlit Application ([streamlit_app.py](streamlit_app.py))**: An interactive dashboard containing sections for Customer Insights, NL-to-SQL chatbot, EDA reports, ML training, statistical rule evaluation, and testing.
+* **FastAPI Backend Server ([app.py](app.py))**: Exposes REST endpoints for LLM query generation, statistical validations, and inference scoring.
 * **Core Modules (`src/`)**:
-  * [loader.py](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/src/data/loader.py): Handles loading datasets into database tables.
-  * [preprocessor.py](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/src/data/preprocessor.py): Feature selection, column masking, and median imputation.
-  * [train.py](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/src/ml/train.py): Pipelines for model fitting.
-  * [predict.py](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/src/ml/predict.py): Inference, scoring thresholds, and risk band assignment.
-  * [evaluate.py](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/src/ml/evaluate.py): Metrics verification logic.
-  * [nl_to_sql.py](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/src/talk_to_data/nl_to_sql.py) & [query_runner.py](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/src/talk_to_data/query_runner.py): Conversational database querying engine.
+  * [loader.py](src/data/loader.py): Handles loading datasets into database tables.
+  * [preprocessor.py](src/data/preprocessor.py): Feature selection, column masking, and median imputation.
+  * [train.py](src/ml/train.py): Pipelines for model fitting.
+  * [predict.py](src/ml/predict.py): Inference, scoring thresholds, and risk band assignment.
+  * [evaluate.py](src/ml/evaluate.py): Metrics verification logic.
+  * [nl_to_sql.py](src/talk_to_data/nl_to_sql.py) & [query_runner.py](src/talk_to_data/query_runner.py): Conversational database querying engine.
 
 ---
 
@@ -146,7 +148,7 @@ Model findings are bridged to banking policy using Decision Rules:
 * **Z-Test for Proportions**: The system runs a statistical test checking the Null Hypothesis ($H_0: p_{rule} = p_{non\_rule}$):
   $$Z = \frac{p_{rule} - p_{non\_rule}}{\text{SE}_{pooled}}$$
   A rule is only approved for the registry if it rejects the null hypothesis at the specified significance level (default $\alpha = 0.05$), matches a minimum lift requirement, and meets sample size guidelines.
-* **Registry Database**: Approved rules are saved to [approved_rules.json](file:///d:/Neostats%20CREDIT%20Risk%20Intelligence/models/approved_rules.json).
+* **Registry Database**: Approved rules are saved to [approved_rules.json](models/approved_rules.json).
 
 ---
 
